@@ -6,9 +6,15 @@
 #include "argparse.h"
 #include "moves.h"
 #include "cchess.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 int main(int argc, char const *argv[])
 {
+#ifdef _WIN32
+    SetConsoleOutputCP(65001);
+#endif
     argparse(argc, argv);
     return 0;
 }
@@ -134,7 +140,7 @@ int ask_for_move(team player, position *current_pos, position *new_pos)
 {
     printf("%s player, enter your move: ", player == BLACK ? "Black" : "White");
     char buffer[7];
-    if(!fgets(buffer, sizeof(buffer), stdin))
+    if (!fgets(buffer, sizeof(buffer), stdin))
         error();
     *current_pos = parse_position(buffer);
     *new_pos = parse_position(buffer[2] == ' ' ? buffer + 3 : buffer + 2);
