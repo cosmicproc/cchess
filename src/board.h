@@ -68,6 +68,7 @@ bool is_position_valid(position pos);
 bool is_position_empty(position pos);
 int change_position(position current_pos, position new_pos);
 void replace_position(position pos, char *new_symbol);
+void empty_position(position pos);
 bool is_any_piece_in_between(position pos1, position pos2);
 team get_piece_team(position pos);
 team opposite_team(team t);

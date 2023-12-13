@@ -4,6 +4,10 @@
 #include "aliases.h"
 #include "moves.h"
 
+static position last_moves[(REQUIRED_MOVES_DRAW + 2) * 2][2];
+static size_t last_moves_cursor = 0;
+static bool enough_moves_passed = false;
+
 bool is_valid_move_rook(position current_pos, position new_pos)
 {
     return (current_pos.x == new_pos.x ||
@@ -51,13 +55,22 @@ bool is_valid_move_king(position current_pos, position new_pos)
            can_castle(current_pos, new_pos);
 }
 
+bool can_en_passant(position current_pos, position new_pos)
+{
+    return abs(new_pos.x - current_pos.x) == 1 && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 1 : -1) &&
+           (str_equal(board[current_pos.y][current_pos.x - 1].symbol, (get_piece_team(current_pos) == WHITE ? B_PAWN : W_PAWN)) ||
+            str_equal(board[current_pos.y][current_pos.x + 1].symbol, (get_piece_team(current_pos) == WHITE ? B_PAWN : W_PAWN))) &&
+           last_moves[last_moves_cursor - 1][0].y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 2 : -2);
+}
+
 bool is_valid_move_pawn(position current_pos, position new_pos)
 {
     return (new_pos.x == current_pos.x && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 1 : -1) && is_position_empty(new_pos)) ||
            (new_pos.x == current_pos.x && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 2 : -2) &&
             !get_piece(current_pos).has_moved && !is_any_piece_in_between(current_pos, new_pos)) ||
            (new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 1 : -1) && abs(new_pos.x - current_pos.x) == 1 &&
-            !is_position_empty(new_pos));
+            !is_position_empty(new_pos)) ||
+           can_en_passant(current_pos, new_pos);
 }
 
 bool is_valid_move(position current_pos, position new_pos)
@@ -88,7 +101,7 @@ bool can_move_to(position current_pos, position new_pos)
     return is_valid_move(current_pos, new_pos);
 }
 
-int castle(position current_pos, position new_pos)
+void castle(position current_pos, position new_pos)
 {
     if (new_pos.x == 2)
     {
@@ -100,15 +113,26 @@ int castle(position current_pos, position new_pos)
         change_position(current_pos, new_pos);
         change_position(POS(7, current_pos.y), POS(5, current_pos.y));
     }
-    return 0;
+}
+
+void en_passant(position current_pos, position new_pos)
+{
+    if (board[current_pos.y][current_pos.x - 1].symbol == (get_piece_team(current_pos) == WHITE ? B_PAWN : W_PAWN))
+        empty_position(POS(current_pos.x - 1, current_pos.y));
+    else
+        empty_position(POS(current_pos.x + 1, current_pos.y));
+    change_position(current_pos, new_pos);
 }
 
 void make_move(position current_pos, position new_pos)
 {
     if (can_castle(current_pos, new_pos))
         castle(current_pos, new_pos);
+    else if (can_en_passant(current_pos, new_pos))
+        en_passant(current_pos, new_pos);
     else
         change_position(current_pos, new_pos);
+    log_move(current_pos, new_pos);
 }
 
 bool can_do_any_move(team t)
@@ -123,9 +147,6 @@ bool can_do_any_move(team t)
     return false;
 }
 
-static position last_moves[(REQUIRED_MOVES_DRAW + 2) * 2][2];
-static size_t last_moves_cursor = 0;
-static bool enough_moves_passed = false;
 void log_move(position current_pos, position new_pos)
 {
     last_moves[last_moves_cursor][0] = current_pos;

@@ -11,7 +11,7 @@ bool is_valid_move_king(position current_pos, position new_pos);
 bool is_valid_move_pawn(position current_pos, position new_pos);
 bool is_valid_move(position current_pos, position new_pos);
 bool can_move_to(position current_pos, position new_pos);
-int castle(position current_pos, position new_pos);
+void castle(position current_pos, position new_pos);
 void make_move(position current_pos, position new_pos);
 bool can_do_any_move(team t);
 void log_move(position current_pos, position new_pos);

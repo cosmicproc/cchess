@@ -110,8 +110,6 @@ void game_loop(team first_player)
                 break;
             }
         }
-
-        log_move(current_pos, new_pos);
         round++;
     }
 }

@@ -152,6 +152,11 @@ void replace_position(position pos, char *new_symbol)
     get_piece(pos).has_moved = true;
 }
 
+void empty_position(position pos)
+{
+    replace_position(pos, EMPTY);
+}
+
 bool is_any_piece_in_between(position pos1, position pos2)
 {
     assert(((pos1.x == pos2.x) != (pos1.y == pos2.y) ||
