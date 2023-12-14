@@ -22,9 +22,9 @@
 #define is_king(X) (str_equal(X, W_KING) || str_equal(X, B_KING))
 #define is_pawn(X) (str_equal(X, W_PAWN) || str_equal(X, B_PAWN))
 #define is_white(X) (str_equal(X, W_ROOK) || str_equal(X, W_KNIGHT) || str_equal(X, W_BISHOP) || \
-                        str_equal(X, W_QUEEN) || str_equal(X, W_KING) || str_equal(X, W_PAWN))
+                     str_equal(X, W_QUEEN) || str_equal(X, W_KING) || str_equal(X, W_PAWN))
 #define is_black(X) (str_equal(X, B_ROOK) || str_equal(X, B_KNIGHT) || str_equal(X, B_BISHOP) || \
-                        str_equal(X, B_QUEEN) || str_equal(X, B_KING) || str_equal(X, B_PAWN))
+                     str_equal(X, B_QUEEN) || str_equal(X, B_KING) || str_equal(X, B_PAWN))
 #define is_symbol(X) (is_black(X) || is_white(X))
 
 #define EMPTY " "
@@ -62,7 +62,7 @@ extern piece board[BOARD_HEIGTH][BOARD_WIDTH];
 // board.c
 void generate_board(void);
 void print_board(team t);
-void extract_board(FILE * file);
+void extract_board(FILE *file);
 int load_board(FILE *file);
 bool is_board_valid(void);
 bool is_position_valid(position pos);

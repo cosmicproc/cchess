@@ -138,7 +138,7 @@ void resume_game(char const *filename)
     char *endptr;
     round_number = strtol(next_player, &endptr, 10);
     if (endptr == next_player)
-        round_number = 1; 
+        round_number = 1;
 }
 
 position parse_position(char *str)

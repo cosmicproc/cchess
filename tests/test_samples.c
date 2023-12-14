@@ -14,8 +14,8 @@ int main(int argc, char const *argv[])
 
     while ((dp = readdir(samples)) != NULL)
     {
-        if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0 )
-            continue;  
+        if (strcmp(dp->d_name, ".") == 0 || strcmp(dp->d_name, "..") == 0)
+            continue;
         FILE *process = popen("../cchess", "w");
         if (process == NULL)
             fail();
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
         strlcpy(path, "samples/", sizeof(dp->d_name) + sizeof("samples/"));
         strlcat(path, dp->d_name, sizeof(dp->d_name) + sizeof("samples/"));
         printf("\nTesting sampe: %s\n", path);
-        FILE *sample = fopen(path , "r");
+        FILE *sample = fopen(path, "r");
         char buffer[256];
         while (fgets(buffer, sizeof(buffer), sample))
         {
