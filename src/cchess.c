@@ -4,11 +4,12 @@
 #include <ctype.h>
 #include "aliases.h"
 #include "argparse.h"
-#include "moves.h"
 #include "cchess.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
+int round_number = 1;
 
 int main(int argc, char const *argv[])
 {
@@ -63,11 +64,9 @@ void error(void)
 
 void game_loop(team first_player)
 {
-    unsigned round = 1;
-
     while (1)
     {
-        team current_player = round % 2 == 0 ? BLACK : WHITE;
+        team current_player = round_number % 2 == 0 ? BLACK : WHITE;
         if (first_player == BLACK)
             current_player = opposite_team(current_player);
 
@@ -110,11 +109,11 @@ void game_loop(team first_player)
                 break;
             }
         }
-        round++;
+        round_number++;
     }
 }
 
-void save_game(team current_player)
+void save_game()
 {
     printf("This will create the file 'cchess_game.txt' in the current directory or overwrite it if it exists. Are you sure? [y/N]\n");
     char c = getchar();
@@ -122,9 +121,24 @@ void save_game(team current_player)
         return;
     FILE *file = fopen("cchess_game.txt", "w");
     extract_board(file);
-    fprintf(file, current_player == WHITE ? "WHITE" : "BLACK");
+    fprintf(file, "%d", round_number);
     printf("The game has been saved to the file cchess_game.txt\nTo resume, use the '-r' flag and type the file name next time you run the program.\n");
     exit(-1);
+}
+
+void resume_game(char const *filename)
+{
+    FILE *file = fopen(filename, "r");
+    char next_player[10];
+    if (!file || load_board(file) != 0 || !fgets(next_player, 10, file))
+    {
+        printf("Couldn't load the file.\n");
+        return;
+    }
+    char *endptr;
+    round_number = strtol(next_player, &endptr, 10);
+    if (endptr == next_player)
+        round_number = 1; 
 }
 
 position parse_position(char *str)
@@ -145,7 +159,7 @@ int ask_for_move(team player, position *current_pos, position *new_pos)
 
     if (str_equal(buffer, "save\n"))
     {
-        save_game(player);
+        save_game();
         while (getchar() != '\n')
             ;
         return -1;

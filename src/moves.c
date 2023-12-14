@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "aliases.h"
-#include "moves.h"
+#include "game.h"
 
 static position last_moves[(REQUIRED_MOVES_DRAW + 2) * 2][2];
 static size_t last_moves_cursor = 0;

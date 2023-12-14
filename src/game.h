@@ -59,6 +59,7 @@ typedef struct piece
 
 extern piece board[BOARD_HEIGTH][BOARD_WIDTH];
 
+// board.c
 void generate_board(void);
 void print_board(team t);
 void extract_board(FILE * file);
@@ -82,3 +83,21 @@ bool is_checked_after_move(team t, position current_pos, position new_pos);
 team get_winner_team(void);
 bool is_draw(void);
 bool is_over(void);
+
+// moves.c
+bool is_valid_move_rook(position current_pos, position new_pos);
+bool is_valid_move_knight(position current_pos, position new_pos);
+bool is_valid_move_bishop(position current_pos, position new_pos);
+bool is_valid_move_queen(position current_pos, position new_pos);
+bool can_castle(position current_pos, position new_pos);
+bool is_valid_move_king(position current_pos, position new_pos);
+bool is_valid_move_pawn(position current_pos, position new_pos);
+bool is_valid_move(position current_pos, position new_pos);
+bool can_move_to(position current_pos, position new_pos);
+void castle(position current_pos, position new_pos);
+void make_move(position current_pos, position new_pos);
+bool can_do_any_move(team t);
+void log_move(position current_pos, position new_pos);
+bool are_last_moves_same(void);
+
+#define REQUIRED_MOVES_DRAW 3

@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "aliases.h"
-#include "moves.h"
-#include "board.h"
+#include "game.h"
 
 static char *board_layout[BOARD_HEIGTH][BOARD_WIDTH] = {
     {W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK},
@@ -94,7 +93,7 @@ int load_board(FILE *file)
             char buffer[10];
             char *symbol;
             char c;
-            if(!fgets(buffer, 4, file))
+            if (!fgets(buffer, 4, file))
                 return -1;
             if (buffer[0] != ' ')
             {

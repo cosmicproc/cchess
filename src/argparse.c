@@ -11,8 +11,8 @@ const argument args[] = {
     {"--version", version, NULL},
     {"-h", help, NULL},
     {"-v", version, NULL},
-    {"-r", NULL, resume},
-    {"--resume", NULL, resume},
+    {"-r", NULL, resume_game},
+    {"--resume", NULL, resume_game},
     {NULL, NULL},
 };
 
@@ -62,17 +62,4 @@ void version(void)
 {
     printf("%s (%.2f) by %s\n%s (%s)\n", PROGRAM_NAME, VERSION, AUTHOR, LICENSE, WEBSIZE);
     exit(0);
-}
-
-void resume(char const *filename)
-{
-    FILE *file = fopen(filename, "r");
-    char next_player[6];
-    if (!file || load_board(file) != 0 || !fgets(next_player, 6, file))
-    {
-        printf("Couldn't load the file.\n");
-        return;
-    }
-    if (str_equal(next_player, "BLACK"))
-        first_player = BLACK; 
 }
