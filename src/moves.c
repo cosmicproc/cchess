@@ -1,8 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include "aliases.h"
+#include <string.h>
 #include "game.h"
+#include "helpers.h"
 
 static position last_moves[(REQUIRED_MOVES_DRAW + 2) * 2][2];
 static size_t last_moves_cursor = 0;
@@ -66,7 +67,7 @@ bool can_en_passant(position current_pos, position new_pos)
 bool is_valid_move_pawn(position current_pos, position new_pos)
 {
     return (new_pos.x == current_pos.x && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 1 : -1) && is_position_empty(new_pos)) ||
-           (new_pos.x == current_pos.x && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 2 : -2) &&
+           (new_pos.x == current_pos.x && new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 2 : -2) && is_position_empty(new_pos) &&
             !get_piece(current_pos).has_moved && !is_any_piece_in_between(current_pos, new_pos)) ||
            (new_pos.y - current_pos.y == (get_piece_team(current_pos) == WHITE ? 1 : -1) && abs(new_pos.x - current_pos.x) == 1 &&
             !is_position_empty(new_pos)) ||
@@ -80,22 +81,22 @@ bool is_valid_move(position current_pos, position new_pos)
 
     if (is_rook(get_piece(current_pos).symbol))
         return is_valid_move_rook(current_pos, new_pos);
-    if (is_knight(get_piece(current_pos).symbol))
+    else if (is_knight(get_piece(current_pos).symbol))
         return is_valid_move_knight(current_pos, new_pos);
-    if (is_bishop(get_piece(current_pos).symbol))
+    else if (is_bishop(get_piece(current_pos).symbol))
         return is_valid_move_bishop(current_pos, new_pos);
-    if (is_queen(get_piece(current_pos).symbol))
+    else if (is_queen(get_piece(current_pos).symbol))
         return is_valid_move_queen(current_pos, new_pos);
-    if (is_king(get_piece(current_pos).symbol))
+    else if (is_king(get_piece(current_pos).symbol))
         return is_valid_move_king(current_pos, new_pos);
-    if (is_pawn(get_piece(current_pos).symbol))
+    else if (is_pawn(get_piece(current_pos).symbol))
         return is_valid_move_pawn(current_pos, new_pos);
     return false;
 }
 
 bool can_move_to(position current_pos, position new_pos)
 {
-    if (get_piece_team(current_pos) == get_piece_team(new_pos) ||
+    if (!is_position_valid(current_pos) || !is_position_valid(new_pos) || get_piece_team(current_pos) == get_piece_team(new_pos) ||
         (is_checked(get_piece_team(current_pos)) && is_checked_after_move(get_piece_team(current_pos), current_pos, new_pos)))
         return false;
     return is_valid_move(current_pos, new_pos);

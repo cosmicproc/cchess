@@ -1,10 +1,11 @@
+#include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include "aliases.h"
-#include "info.h"
-#include "cchess.h"
+#include <string.h>
 #include "argparse.h"
+#include "cchess.h"
+#include "helpers.h"
+#include "info.h"
 
 const argument args[] = {
     {"--help", help, NULL},
@@ -51,10 +52,10 @@ void invalid(char const *arg)
 void help(void)
 {
     printf("usage: %s ", PROGRAM_NAME);
-    printf("type 'save' instead of a move to save the current game to a file.");
     for (size_t i = 0; args[i].name; i++)
         printf("[%s] ", args[i].name);
     printf("\n");
+    printf("type 'save' instead of a move to save the current game to a file.\n");
     exit(0);
 }
 

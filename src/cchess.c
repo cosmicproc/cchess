@@ -1,10 +1,11 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <ctype.h>
-#include "aliases.h"
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "argparse.h"
 #include "cchess.h"
+#include "helpers.h"
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -56,10 +57,10 @@ void end_game(team winner)
     }
 }
 
-void error(void)
+void stop_game(void)
 {
-    printf("The game stopped. (an error occured)\n");
-    exit(-1);
+    printf("The game stopped.\n");
+    exit(0);
 }
 
 void game_loop(team first_player)
@@ -123,7 +124,7 @@ void save_game()
     extract_board(file);
     fprintf(file, "%d", round_number);
     printf("The game has been saved to the file cchess_game.txt\nTo resume, use the '-r' flag and type the file name next time you run the program.\n");
-    exit(-1);
+    exit(0);
 }
 
 void resume_game(char const *filename)
@@ -153,7 +154,7 @@ int ask_for_move(team player, position *current_pos, position *new_pos)
     printf("%s player, enter your move: ", player == BLACK ? "Black" : "White");
     char buffer[7];
     if (!fgets(buffer, sizeof(buffer), stdin))
-        error();
+        stop_game();
     *current_pos = parse_position(buffer);
     *new_pos = parse_position(buffer[2] == ' ' ? buffer + 3 : buffer + 2);
 
@@ -188,7 +189,7 @@ char ask_for_promotion(team player)
     printf("%s player, which piece will you promote your pawn to [k/b/r/q]: ", player == BLACK ? "Black" : "White");
     char buffer[3];
     if (!fgets(buffer, sizeof(buffer), stdin))
-        error();
+        stop_game();
     if (buffer[1] != '\n')
     {
         printf("Incorrect syntax. Enter one of the possible options [k/b/r/q] (k = knight, b = bishop, r = rook, q = queen).\n");

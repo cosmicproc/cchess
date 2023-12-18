@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #define W_ROOK "♜"
 #define W_KNIGHT "♞"

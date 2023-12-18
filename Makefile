@@ -1,9 +1,9 @@
-CFLAGS := -O2
+CFLAGS += -O2
 
 cchess: src/*
 	$(CC) $(CFLAGS) -o cchess src/*.c
 
-debug: CFLAGS += -DDEBUG -g
+debug: CFLAGS += -DDEBUG -g -Wall
 debug: cchess
 
 test: debug tests/*
@@ -21,4 +21,4 @@ test: debug tests/*
 .PHONY: clean
 
 clean:
-	rm -r cchess tests/bin
+	rm -rf cchess tests/bin

@@ -1,9 +1,9 @@
+#include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <assert.h>
-#include "aliases.h"
+#include <string.h>
 #include "game.h"
+#include "helpers.h"
 
 static char *board_layout[BOARD_HEIGTH][BOARD_WIDTH] = {
     {W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK},
@@ -158,8 +158,6 @@ void empty_position(position pos)
 
 bool is_any_piece_in_between(position pos1, position pos2)
 {
-    assert(((pos1.x == pos2.x) != (pos1.y == pos2.y) ||
-            (abs(pos1.x - pos2.x) == abs(pos1.y - pos2.y) && abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y) != 0)));
     position vector = {0, 0};
     if (pos1.x == pos2.x)
     {
@@ -227,7 +225,6 @@ bool can_king_attack(position current_pos, position target_pos)
 
 position get_attacker(position pos, team attacker)
 {
-    assert(attacker != NONE);
     for (size_t y = 0; y < BOARD_HEIGTH; y++)
         for (size_t x = 0; x < BOARD_WIDTH; x++)
             if (get_piece_team(POS(x, y)) == attacker)
@@ -250,7 +247,6 @@ bool is_under_attack(position pos, team attacker)
 
 bool is_checked(team t)
 {
-    assert(t != NONE);
     for (size_t y = 0; y < BOARD_HEIGTH; y++)
         for (size_t x = 0; x < BOARD_WIDTH; x++)
             if (str_equal(board[y][x].symbol, t == WHITE ? W_KING : B_KING))
@@ -260,11 +256,11 @@ bool is_checked(team t)
 
 bool is_checked_after_move(team t, position current_pos, position new_pos)
 {
-    piece board_copy[BOARD_HEIGTH][BOARD_WIDTH];
-    memcpy(&board_copy, &board, sizeof(board_copy));
+    piece board_original[BOARD_HEIGTH][BOARD_WIDTH];
+    memcpy(&board_original, &board, sizeof(board_original));
     change_position(current_pos, new_pos);
     bool r = is_checked(t);
-    memcpy(&board, &board_copy, sizeof(board));
+    memcpy(&board, &board_original, sizeof(board));
     return r;
 }
 
