@@ -4,4 +4,4 @@
 #define VERSION 1.1
 #define LICENSE "MIT License"
 #define AUTHOR "Cosmic Process"
-#define WEBSIZE "https://github.com/cosmicproc/cchess"
+#define WEBSITE "https://github.com/cosmicproc/cchess"

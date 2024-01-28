@@ -61,6 +61,6 @@ void help(void)
 
 void version(void)
 {
-    printf("%s (%.2f) by %s\n%s (%s)\n", PROGRAM_NAME, VERSION, AUTHOR, LICENSE, WEBSIZE);
+    printf("%s (%.2f) by %s\n%s (%s)\n", PROGRAM_NAME, VERSION, AUTHOR, LICENSE, WEBSITE);
     exit(0);
 }
